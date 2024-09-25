@@ -69,7 +69,7 @@ def on_press(key):
 # Ativa o listener para detectar cliques e teclas
 with mouse.Listener(on_click=on_click) as listener:
     with keyboard.Listener(on_press=on_press) as key_listener:
-        print("Pressione 'a' para iniciar a gravação. Clique com o botão esquerdo para registrar as coordenadas.")
+        print("Pressione 'a' para iniciar a gravação. Clique com o botão direito para registrar as coordenadas.")
         key_listener.join()
 
 print("Programa encerrado.")
