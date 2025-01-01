@@ -1,5 +1,5 @@
 # My Python Compilation 🚀  
-**UNDER CONSTRUCTION**  
+**UNDER CONSTRUCTION - I'm organizing here, so sorry for the mess**
 
 Welcome to my Python repository! Here you'll find a collection of tools and calculations I've created, whether for my projects or just for fun.  
 

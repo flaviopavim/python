@@ -1,0 +1,2 @@
+Eai galera, tudo bem?
+Esse é um exemplo de áudio criado com python.
