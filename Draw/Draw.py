@@ -1,6 +1,7 @@
 import pygame
 import sys
 import json
+import time
 
 # Configurações iniciais
 WIDTH, HEIGHT = 640, 480
@@ -8,12 +9,14 @@ GRID_SIZE = 32
 CELL_SIZE = 10
 LAYERS = 8
 FILENAME = "file.draw"
+FRAME_DELAY = 0.2  # Tempo entre quadros em segundos
 
 # Cores
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 GRAY = (200, 200, 200)
 TOOLS_BG = (150, 150, 150)
+GREEN = (0, 255, 0)
 
 # Inicializa pygame
 pygame.init()
@@ -44,6 +47,7 @@ def save_to_file():
 # Inicializa o array 3D (camadas)
 grid = initialize_file()
 current_layer = 0
+playing = False  # Controla o estado do botão "Play"
 
 # Função para desenhar a barra de camadas
 def draw_layer_bar():
@@ -79,13 +83,27 @@ def draw_grid():
 
 # Função para desenhar ferramentas
 def draw_tools():
-    pygame.draw.rect(screen, TOOLS_BG, (480, 60, 150, 100))
+    pygame.draw.rect(screen, TOOLS_BG, (480, 60, 150, 150))
     pygame.draw.rect(screen, BLACK, (490, 70, 30, 30))  # Desenhar
     pygame.draw.rect(screen, WHITE, (490, 110, 30, 30))  # Borracha
+    pygame.draw.rect(screen, GREEN if playing else TOOLS_BG, (490, 150, 30, 30))  # Play
 
 # Variáveis de controle
 drawing = False
 using_eraser = False
+
+# Função de animação
+def play_animation():
+    global current_layer, playing
+    while playing:
+        current_layer = (current_layer + 1) % LAYERS
+        pygame.time.delay(int(FRAME_DELAY * 1000))
+        screen.fill(WHITE)
+        draw_layer_bar()
+        draw_palette()
+        draw_grid()
+        draw_tools()
+        pygame.display.flip()
 
 # Loop principal
 while True:
@@ -115,10 +133,19 @@ while True:
                     using_eraser = False  # Ferramenta de desenho
                 elif 110 <= y <= 140:
                     using_eraser = True  # Ferramenta de borracha
+                elif 150 <= y <= 180:
+                    playing = not playing
+                    if playing:
+                        pygame.time.set_timer(pygame.USEREVENT, int(FRAME_DELAY * 1000))
+                    else:
+                        pygame.time.set_timer(pygame.USEREVENT, 0)
 
             # Verifica clique na área de desenho
             elif 100 <= x < 100 + GRID_SIZE * CELL_SIZE and 60 <= y < 60 + GRID_SIZE * CELL_SIZE:
                 drawing = True
+
+        if event.type == pygame.USEREVENT and playing:
+            current_layer = (current_layer + 1) % LAYERS
 
         if event.type == pygame.MOUSEBUTTONUP:
             drawing = False
