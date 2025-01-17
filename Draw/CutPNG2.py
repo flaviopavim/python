@@ -42,10 +42,24 @@ def mover_quadro(event):
 
     atualizar_preview()
 
-def redimensionar_quadro(event):
-    novo_tamanho = max(32, int(tamanho_input.get()))
+def redimensionar_quadro():
+    try:
+        novo_tamanho = int(tamanho_input.get())
+        if novo_tamanho < 32:
+            novo_tamanho = 32  # Tamanho mínimo
+    except ValueError:
+        print("Insira um valor válido para o tamanho.")
+        return
+
+    # Limitar o tamanho para não ultrapassar os limites da imagem
+    max_width = imagem.width - quadro.winfo_x()
+    max_height = imagem.height - quadro.winfo_y()
+    novo_tamanho = min(novo_tamanho, max_width, max_height)
+
+    # Aplicar o novo tamanho ao quadro
     quadro.config(width=novo_tamanho, height=novo_tamanho)
     atualizar_preview()
+
 
 def atualizar_preview():
     global preview_imagem
