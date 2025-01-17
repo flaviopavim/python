@@ -42,7 +42,7 @@ def mover_quadro(event):
 
     atualizar_preview()
 
-def redimensionar_quadro():
+def redimensionar_imagem():
     try:
         novo_tamanho = int(tamanho_input.get())
         if novo_tamanho < 32:
@@ -52,14 +52,17 @@ def redimensionar_quadro():
         return
 
     # Limitar o tamanho para não ultrapassar os limites da imagem
-    max_width = imagem.width - quadro.winfo_x()
-    max_height = imagem.height - quadro.winfo_y()
-    novo_tamanho = min(novo_tamanho, max_width, max_height)
+    novo_tamanho = min(novo_tamanho, imagem.width, imagem.height)
 
-    # Aplicar o novo tamanho ao quadro
-    quadro.config(width=novo_tamanho, height=novo_tamanho)
+    # Redimensiona a imagem para o novo tamanho
+    #imagem_redimensionada = imagem.resize((novo_tamanho, novo_tamanho), Image.Resampling.LANCZOS)
+    #imagem_tk = ImageTk.PhotoImage(imagem_redimensionada)
+
+    #canvas.config(width=imagem_redimensionada.width, height=imagem_redimensionada.height)
+    canvas.create_image(0, 0, anchor=tk.NW, image=imagem_tk)
+
+    quadro.place(x=0, y=0, width=novo_tamanho, height=novo_tamanho)
     atualizar_preview()
-
 
 def atualizar_preview():
     global preview_imagem
@@ -102,14 +105,14 @@ preview_canvas = tk.Canvas(frame_lateral, width=32, height=32, bg="white")
 preview_canvas.pack(pady=10)
 
 # Input de tamanho
-tamanho_label = tk.Label(frame_lateral, text="Tamanho do quadro:")
+tamanho_label = tk.Label(frame_lateral, text="Tamanho da imagem:")
 tamanho_label.pack()
 
 tamanho_input = tk.Entry(frame_lateral)
 tamanho_input.insert(0, "64")
 tamanho_input.pack()
 
-btn_redimensionar = tk.Button(frame_lateral, text="Redimensionar Quadro", command=redimensionar_quadro)
+btn_redimensionar = tk.Button(frame_lateral, text="Redimensionar Imagem", command=redimensionar_imagem)
 btn_redimensionar.pack(pady=5)
 
 # Botões de controle
