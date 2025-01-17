@@ -59,7 +59,9 @@ btn_salvar = tk.Button(janela, text="Recortar e Salvar", command=recortar_e_salv
 btn_salvar.pack(side=tk.BOTTOM, pady=10)
 
 # Quadro de seleção
-quadro = tk.Frame(canvas, bg="red", width=32, height=32)
+quadro = tk.Frame(canvas, bg="white", width=32, height=32)
+quadro.place(x=0, y=0)
+quadro.attributes = {'alpha': 0.5}
 quadro.bind("<Button-1>", iniciar_arrasto)
 quadro.bind("<B1-Motion>", mover_quadro)
 
