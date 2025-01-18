@@ -1,32 +1,43 @@
 import cv2
 
-# Carrega o classificador de faces pré-treinado
+# Load the pre-trained face detection classifier
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_frontalface_default.xml')
 
-# Inicializa a câmera
+# Initialize the camera
 cap = cv2.VideoCapture(0)
 
 while True:
-    # Lê o quadro da câmera
+    # Capture a frame from the camera
     ret, frame = cap.read()
 
-    # Converte o quadro para escala de cinza
+    # Convert the frame to grayscale
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-    # Detecta as faces no quadro
-    faces = face_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=5, minSize=(30, 30))
+    # Detect faces in the grayscale frame
+    faces = face_cascade.detectMultiScale(
+        gray,               # Input image
+        scaleFactor=1.1,    # Scale factor for resizing during detection
+        minNeighbors=5,     # Minimum number of neighbors for a detection
+        minSize=(30, 30)    # Minimum size of detected faces
+    )
 
-    # Desenha retângulos ao redor das faces detectadas
+    # Draw rectangles around detected faces
     for (x, y, w, h) in faces:
-        cv2.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.rectangle(
+            frame,          # Image to draw on
+            (x, y),         # Top-left corner of the rectangle
+            (x + w, y + h), # Bottom-right corner of the rectangle
+            (0, 255, 0),    # Color of the rectangle (Green)
+            2               # Thickness of the rectangle border
+        )
 
-    # Exibe o quadro resultante
+    # Display the resulting frame
     cv2.imshow('Video', frame)
 
-    # Verifica se a tecla 'q' foi pressionada para sair do loop
+    # Exit the loop if the 'q' key is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Libera os recursos
+# Release camera resources and close display windows
 cap.release()
 cv2.destroyAllWindows()
