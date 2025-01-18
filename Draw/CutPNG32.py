@@ -3,7 +3,10 @@ from tkinter import filedialog
 from PIL import Image, ImageTk, ImageOps
 
 def selecionar_arquivo():
-    caminho = filedialog.askopenfilename(filetypes=[("PNG files", "*.png")])
+    caminho = filedialog.askopenfilename(filetypes=[("Imagem PNG", "*.png"),
+                                                   ("Imagem GIF", "*.gif"),
+                                                   ("Imagem WebP", "*.webp"),
+                                                   ("Todos os Arquivos", "*.*")])
     if caminho:
         abrir_imagem(caminho)
 
