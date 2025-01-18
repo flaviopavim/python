@@ -3,14 +3,15 @@ import time
 
 try:
     while True:
-        # Captura a posição atual do mouse
+        # Capture the current position of the mouse cursor
         x, y = pyautogui.position()
         
-        # Imprime as coordenadas (x, y)
+        # Print the (x, y) coordinates of the mouse
         print(f"x: {x}, y: {y}")
         
-        # Pequeno intervalo para evitar sobrecarregar a CPU
+        # Small delay to reduce CPU usage
         time.sleep(0.5)
 
 except KeyboardInterrupt:
-    print("\nPrograma finalizado.")
+    # Handle keyboard interruption (Ctrl + C) gracefully
+    print("\nProgram terminated.")
