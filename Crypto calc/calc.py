@@ -1,15 +1,16 @@
 coin=200000 # qualquer moeda, usei o atual do Bitcoin
 investimento=100 # quanto quer investir?
 ganho=0 # quanto quer lucrar em cima do que investiu?
+taxa=0.7 # taxa da corretora
 
 #############################################################################
 # mágica *-*
-comprado=investimento-((investimento*0.7)/100)
+comprado=investimento-((investimento*taxa)/100)
 def buscaAlvo(coin,investimento,ganho):
     lucro_taxa=alvo=0
     while (lucro_taxa < investimento):
         lucro = (alvo * comprado) / coin
-        lucro_taxa = lucro-ganho - ((lucro * 0.7) / 100)
+        lucro_taxa = lucro-ganho - ((lucro * taxa) / 100)
         alvo =alvo + (coin/10000)
     return [alvo-(coin/10000),lucro_taxa]
 
@@ -34,7 +35,7 @@ print('Investimento - taxa: '+str(lucro_taxa+ganho))
 #alvo_venda=170000 #forçando novo alvo de venda
 
 reverso=comprado*alvo_venda/(lucro_taxa+ganho)
-alvo_compra=reverso-(reverso*0.7/100)
+alvo_compra=reverso-(reverso*taxa/100)
 
 print('Alvo de compra:      '+str(alvo_compra))
 
