@@ -1,38 +1,43 @@
-#pilha inicial
-pilha=[3,8,1,6,4]
-#ou pode iniciar a pilha vazia (só tirar a # da próxima linha)
-#pilha=[]
+# Initial stack
+stack = [3, 8, 1, 6, 4]  # Predefined list of numbers
+# Alternatively, the stack can start empty (uncomment the next line)
+# stack = []
 
-#função pra retornar mínimo, média e máximo
-def retornaMMM(pilha):
-    pilha.sort() #organiza em ordem crescente
-    minimo=pilha[0] #pega o menor (primeiro)
-    maximo=pilha[-1] #pega o maior (último)
-    soma=contador=0 #soma e contador inicia com zero
-    #percorre a pilha
-    for numero in pilha:
-        #soma cada número da pilha numa variável
-        soma=soma+numero
-        #conta quantos números tem na pilha
-        contador=contador+1
-    #tira a média
-    media=soma/contador
-    #retorno geral
-    return [minimo,maximo,media]
+# Function to return minimum, average, and maximum
+def getMinAvgMax(stack):
+    stack.sort()  # Sorts the stack in ascending order
+    minimum = stack[0]  # The smallest value (first element in the sorted list)
+    maximum = stack[-1]  # The largest value (last element in the sorted list)
+    total = count = 0  # Initialize sum and counter to zero
 
-pilha.append(9) #adiciona mais um ítem na pilha
-pilha.append(2) #adiciona mais um ítem na pilha
-pilha.append(5) #adiciona mais um ítem na pilha
-pilha.append(0) #adiciona mais um ítem na pilha
-pilha.pop()     #remove último ítem da pilha
+    # Iterate through the stack
+    for number in stack:
+        # Add each number in the stack to the total variable
+        total += number
+        # Count the number of elements in the stack
+        count += 1
 
-#ordem crescente
-pilha.sort() #organiza em ordem crescente
-print('Ordem crescente: ')
-print(pilha)
+    # Calculate the average
+    average = total / count
 
-#coloca tudo na variável 'minhaPilha'
-minhaPilha=retornaMMM(pilha)
+    # Return the minimum, maximum, and average as a list
+    return [minimum, maximum, average]
 
-print('Mínimo, máximo e média: ')
-print(minhaPilha)
+# Add more elements to the stack
+stack.append(9)  # Add 9 to the stack
+stack.append(2)  # Add 2 to the stack
+stack.append(5)  # Add 5 to the stack
+stack.append(0)  # Add 0 to the stack
+stack.pop()      # Remove the last element from the stack
+
+# Sort the stack in ascending order
+stack.sort()  # Organize the stack in ascending order
+print('Ascending order: ')
+print(stack)
+
+# Store the minimum, maximum, and average in the variable 'myStack'
+myStack = getMinAvgMax(stack)
+
+# Print the results
+print('Minimum, maximum, and average: ')
+print(myStack)

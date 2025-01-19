@@ -1,127 +1,137 @@
+"""
+This script calculates income, expenses, and savings to determine the timeline for purchasing items from a predefined shopping list. 
+
+Key Features:
+1. Converts numerical values into Brazilian reais format for better readability.
+2. Calculates total monthly, annual, weekly, and daily expenses based on categorized inputs.
+3. Simulates monthly savings by deducting expenses from income and accumulates the remaining balance.
+4. Determines when items on the shopping list can be purchased based on available savings.
+5. Outputs a detailed timeline for purchases, including the remaining balance after each transaction.
+"""
 
 import math
 
-#converte decimal em reais
-def rs(v):
-    r='R$ '
-    r=r+'{0:.2f}'.format(v)
-    return str(r)
+# Converts a decimal value into a currency string in Brazilian reais
+def to_currency(value):
+    result = 'R$ '
+    result += '{0:.2f}'.format(value)
+    return str(result)
 
-#soma cada ítem do array
-def somaArray(array):
-    sum=0
+# Sums all items in an array
+def sum_array(array):
+    total = 0
     for val in array:
-        sum=sum+val
-    return sum
+        total += val
+    return total
 
-#seu ganho mensal
-array_mensal=[
-    9200
-    #4000,
-    #4800
-    #5200
+# Your monthly income
+monthly_income_array = [
+    9200  # Example: Monthly income
+    # 4000,
+    # 4800,
+    # 5200
 ]
 
-ganho_mensal=somaArray(array_mensal)
+monthly_income = sum_array(monthly_income_array)
 
-print("Ganho mensal:  "+rs(ganho_mensal)+"")
+print("Monthly Income:  " + to_currency(monthly_income) + "")
 print("--------------------------")
 
-#seus gastos anuais
-array_anual=[
-    420, #moto
-]
-#seus gastos mensais
-array_mensal=[
-    750, #aluguel
-    120, #internet
-    200, #luz
-    60, #água
-]
-#seus gastos semanais
-array_semanal=[
-    450, #mercado
-    350, #delivery
-    50, #erva
-    50, #ração/whiskas
+# Your annual expenses
+annual_expenses_array = [
+    420,  # Example: Motorbike expenses
 ]
 
-#soma tudo no mensal pros próximos cálculos
-gasto_mensal=somaArray(array_mensal)
-gasto_mensal=gasto_mensal+(somaArray(array_anual)/12)
-gasto_mensal=gasto_mensal+(somaArray(array_semanal)/7*30)
+# Your monthly expenses
+monthly_expenses_array = [
+    750,  # Rent
+    120,  # Internet
+    200,  # Electricity
+    60,   # Water
+]
 
-#divide conforme o tipo de gasto
-gasto_anual=gasto_mensal*12
-gasto_diario=gasto_mensal/30
-gasto_semanal=gasto_diario*7
+# Your weekly expenses
+weekly_expenses_array = [
+    450,  # Groceries
+    350,  # Delivery
+    50,   # Herbs
+    50,   # Cat food/litter
+]
 
-print("Gasto anual:   "+rs(gasto_anual))
-print("Gasto mensal:  "+rs(gasto_mensal))
-print("Gasto semanal: "+rs(gasto_semanal))
-print("Gasto diário:  "+rs(gasto_diario))
+# Add all expenses to calculate monthly expenses for subsequent calculations
+monthly_expenses = sum_array(monthly_expenses_array)
+monthly_expenses += (sum_array(annual_expenses_array) / 12)
+monthly_expenses += (sum_array(weekly_expenses_array) / 7 * 30)
+
+# Break down expenses into annual, monthly, weekly, and daily categories
+annual_expenses = monthly_expenses * 12
+daily_expenses = monthly_expenses / 30
+weekly_expenses = daily_expenses * 7
+
+print("Annual Expenses:   " + to_currency(annual_expenses))
+print("Monthly Expenses:  " + to_currency(monthly_expenses))
+print("Weekly Expenses:   " + to_currency(weekly_expenses))
+print("Daily Expenses:    " + to_currency(daily_expenses))
 print("----------------------------------")
 
-if (ganho_mensal<gasto_mensal):
-    print("Seu gasto é maior que seu ganho")
-    print("Gasto total: "+rs(gasto_mensal))
+if monthly_income < monthly_expenses:
+    print("Your expenses exceed your income")
+    print("Total Expenses: " + to_currency(monthly_expenses))
     print("----------------------------------")
 
-array_comprar=[
-    {"item":"casa","price":200000}, 
-    #{"item":"harley davidson","price":80000},
-    {"item":"carro","price":40000}, 
-    {"item":"bateria","price":7000}, 
-    {"item":"aspirador","price":650},
-    {"item":"máquina de lavar","price":2700},
-    {"item":"geladeira","price":3000},
-    {"item":"fogão","price":600},
-    {"item":"fonte pros gatos","price":120},
-    {"item":"placa de video","price":3800},
-    #{"item":"viajem","price":15000}, 
+# Items you want to buy
+shopping_list = [
+    {"item": "house", "price": 200000},
+    # {"item": "harley davidson", "price": 80000},
+    {"item": "car", "price": 40000},
+    {"item": "drum kit", "price": 7000},
+    {"item": "vacuum cleaner", "price": 650},
+    {"item": "washing machine", "price": 2700},
+    {"item": "refrigerator", "price": 3000},
+    {"item": "stove", "price": 600},
+    {"item": "fountain for cats", "price": 120},
+    {"item": "graphics card", "price": 3800},
+    # {"item": "trip", "price": 15000},
 ]
 
-total_mensal=0
-for i in range(10000):
-    total_mensal=total_mensal+(ganho_mensal-gasto_mensal)
-    tem_saldo=False
-    str_=""
-    for comprar in array_comprar:
-        if total_mensal>=comprar["price"]:
-            tem_saldo=True
-    if tem_saldo:
-        #print("----------------------------------")
-        anos=math.floor((i+1)/12)
-        meses=(i+1)-(anos*12)
-        str_=""
-        if (anos==1):
-            str_=str_+"Em "+str(anos)+" ano"
-        elif (anos>1):
-            str_=str_+"Em "+str(anos)+" anos"
-        if (anos>0 and meses>0):
-            str_=str_+" e "
-        if (meses==1):
-            str_=str_+str(meses)+" mes"
-        elif (meses>1):
-            str_=str_+str(meses)+" meses"
-        print(str_)
-        #print("Contas mes "+str(i+1)+": "+rs(gasto_mensal)+"")
-        #print("Saldo mes "+str(i+1)+": "+rs(total_mensal)+"")
-    total_mensal_1=total_mensal
-    array_comprar_=[]
-    str_=""
-    for comprar in array_comprar:
-        if total_mensal_1>=comprar["price"]:
-                str_=str_+"Comprar "+comprar["item"]+" "+rs(total_mensal_1)+" - "+rs(comprar["price"])+" = "+rs(total_mensal_1-comprar["price"])+"\n"
-                total_mensal_1=total_mensal_1-comprar["price"]
+total_savings = 0
+for month in range(10000):
+    total_savings += (monthly_income - monthly_expenses)
+    can_afford = False
+    output = ""
+    for item in shopping_list:
+        if total_savings >= item["price"]:
+            can_afford = True
+    if can_afford:
+        years = math.floor((month + 1) / 12)
+        months = (month + 1) - (years * 12)
+        output = ""
+        if years == 1:
+            output += f"In {years} year"
+        elif years > 1:
+            output += f"In {years} years"
+        if years > 0 and months > 0:
+            output += " and "
+        if months == 1:
+            output += f"{months} month"
+        elif months > 1:
+            output += f"{months} months"
+        print(output)
 
-    for comprar in array_comprar:
-        if total_mensal>=comprar["price"]:
-                total_mensal=total_mensal-comprar["price"]
+    # Adjust savings after purchases
+    temp_savings = total_savings
+    shopping_list_copy = []
+    output = ""
+    for item in shopping_list:
+        if temp_savings >= item["price"]:
+            output += f"Buy {item['item']} {to_currency(temp_savings)} - {to_currency(item['price'])} = {to_currency(temp_savings - item['price'])}\n"
+            temp_savings -= item["price"]
+
+    for item in shopping_list:
+        if total_savings >= item["price"]:
+            total_savings -= item["price"]
         else:
-            array_comprar_.append(comprar)
-    array_comprar=array_comprar_
-    if str_!="":
-        print(str_+"----------------------------------")
-    #    print(str_+"Saldo mes "+str(i+1)+": "+rs(total_mensal)+"")
-
+            shopping_list_copy.append(item)
+    shopping_list = shopping_list_copy
+    if output != "":
+        print(output + "----------------------------------")
