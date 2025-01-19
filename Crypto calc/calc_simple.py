@@ -10,7 +10,3 @@ t2=getBuyTarget(t)
 
 print('Sell target: '+str(t))
 print('Buy target: '+str(t2))
-
-
-
-
