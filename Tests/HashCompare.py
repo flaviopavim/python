@@ -1,22 +1,22 @@
+# A programming course student asked to create this code
 
-
-# função pra comparar os hash
-def compare(hashs_string):
+# Function to compare the hashes
+def compare(hash_string):
     
-    # Separa os pares de hash
-    hashs = hashs_string.split(";")
+    # Split the hash pairs
+    hashes = hash_string.split(";")
     
-    # Itera sobre os pares
-    for item in hashs:
+    # Iterate over the pairs
+    for item in hashes:
         
-        # Separa os hashes
+        # Split the hashes
         pair = item.split(",")
         
-        # Compara os hashes
+        # Compare the hashes
         if pair[0] == pair[1]:
-            print("Correto")
+            print("Correct")
         else:
-            print("Incorreto")
+            print("Incorrect")
     
-# Testa a função
+# Test the function
 compare("abc123,abc123;def456,def457")

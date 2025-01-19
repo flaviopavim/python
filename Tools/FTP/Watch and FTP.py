@@ -5,30 +5,34 @@ from ftplib import FTP
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 
-# Configurações de conexão FTP
+# Description:
+# This script monitors a local directory for changes and uploads files or directories to a remote FTP server.
+# It will upload files that are newly created or modified, ensuring that the remote directory structure is properly created if it does not exist.
+
+# FTP connection configurations
 ftp_host = "ftp.yoursite.com.br"
 ftp_user = "youruser"
 ftp_password = "yourpass"
 
-# Caminhos locais e remotos
-path_to_watch = "your/local/path/here"  # Substitua pelo caminho da pasta a ser monitorada
-remote_dir = "/your/remote/path/here"  # Caminho base no servidor FTP
+# Local and remote paths
+path_to_watch = "your/local/path/here"  # Replace with the path to the folder to monitor
+remote_dir = "/your/remote/path/here"  # Base path on the FTP server
 
-# Funções FTP
+# FTP functions
 def sanitize_path(path):
-    """Converte um caminho para o formato Unix (compatível com servidores FTP)."""
+    """Converts a path to Unix format (compatible with FTP servers)."""
     return path.replace("\\", "/")
 
 def file_exists(ftp, remote_path):
-    """Verifica se um arquivo ou diretório já existe no servidor FTP."""
+    """Checks if a file or directory already exists on the FTP server."""
     try:
-        ftp.size(remote_path)  # Tenta obter o tamanho do arquivo
+        ftp.size(remote_path)  # Attempts to get the file size
         return True
     except:
         return False
 
 def ensure_remote_directory_exists(ftp, remote_dir):
-    """Garante que o diretório remoto exista no servidor FTP, criando-o se necessário."""
+    """Ensures the remote directory exists on the FTP server, creating it if necessary."""
     dirs = remote_dir.split("/")
     path = ""
     for directory in dirs:
@@ -38,44 +42,45 @@ def ensure_remote_directory_exists(ftp, remote_dir):
                 ftp.cwd(path)
             except:
                 ftp.mkd(path)
-                print(f"Diretório {path} criado no servidor FTP.")
+                print(f"Directory {path} created on the FTP server.")
 
 def upload_file_if_different(ftp, local_path, remote_path):
-    """Faz o upload de um arquivo se ele não existir ou for diferente do remoto."""
-    local_size = os.path.getsize(local_path)  # Tamanho do arquivo local
+    """Uploads a file if it does not exist or is different from the remote version."""
+    local_size = os.path.getsize(local_path)  # Local file size
 
-    # Garante que o diretório remoto existe
+    # Ensure the remote directory exists
     remote_dir = os.path.dirname(remote_path)
     ensure_remote_directory_exists(ftp, remote_dir)
 
     if file_exists(ftp, remote_path):
         try:
-            remote_size = ftp.size(remote_path)  # Tamanho do arquivo remoto
-            #if local_size == remote_size:
-            #    print(f"Arquivo {remote_path} já existe e é idêntico. Não será feito upload.")
-            #    return
+            remote_size = ftp.size(remote_path)  # Remote file size
+            # Uncomment the lines below if you want to skip identical files
+            # if local_size == remote_size:
+            #     print(f"File {remote_path} already exists and is identical. Skipping upload.")
+            #     return
         except Exception as e:
-            print(f"Não foi possível verificar o tamanho do arquivo remoto: {e}")
+            print(f"Could not check the remote file size: {e}")
 
     with open(local_path, 'rb') as file:
         ftp.storbinary(f'STOR {remote_path}', file)
-        print(f"Upload do arquivo {local_path} para {remote_path} concluído.")
+        print(f"Upload of file {local_path} to {remote_path} completed.")
 
 def upload_directory(ftp, local_dir, remote_dir):
-    """Faz o upload de todos os arquivos e diretórios de local_dir para remote_dir no servidor FTP."""
+    """Uploads all files and directories from local_dir to remote_dir on the FTP server."""
     try:
-        ftp.cwd(remote_dir)  # Muda para o diretório remoto
+        ftp.cwd(remote_dir)  # Change to the remote directory
     except:
-        print(f"Erro ao acessar o diretório remoto {remote_dir}.")
+        print(f"Error accessing remote directory {remote_dir}.")
         return
     
     for root, dirs, files in os.walk(local_dir):
-        # Ignora o diretório '.git' e seus subdiretórios
+        # Skip the '.git' directory and its subdirectories
         if '.git' in root:
             continue
 
         for dir_name in dirs:
-            # Ignora diretórios '.git'
+            # Skip '.git' directories
             if '.git' in dir_name:
                 continue
             
@@ -83,10 +88,10 @@ def upload_directory(ftp, local_dir, remote_dir):
             try:
                 ftp.mkd(remote_path)
             except:
-                pass  # Suprime mensagens de erro ao criar diretórios já existentes
+                pass  # Suppress errors when creating already existing directories
 
         for file_name in files:
-            # Ignora arquivos '.git'
+            # Skip '.git' files
             if '.git' in file_name:
                 continue
             
@@ -94,7 +99,7 @@ def upload_directory(ftp, local_dir, remote_dir):
             remote_path = sanitize_path(os.path.join(remote_dir, os.path.relpath(local_path, local_dir)))
             upload_file_if_different(ftp, local_path, remote_path)
 
-# Monitoramento de Arquivos
+# File system monitoring
 class Watcher:
     def __init__(self, directory_to_watch, ftp, remote_dir):
         self.DIRECTORY_TO_WATCH = directory_to_watch
@@ -106,14 +111,14 @@ class Watcher:
         event_handler = Handler(self.ftp, self.remote_dir, self.DIRECTORY_TO_WATCH)
         self.observer.schedule(event_handler, self.DIRECTORY_TO_WATCH, recursive=True)
         self.observer.start()
-        print(f"Monitorando alterações na pasta: {self.DIRECTORY_TO_WATCH}")
+        print(f"Monitoring changes in folder: {self.DIRECTORY_TO_WATCH}")
 
         try:
             while True:
                 time.sleep(5)
         except KeyboardInterrupt:
             self.observer.stop()
-            print("Monitoramento encerrado.")
+            print("Monitoring stopped.")
         self.observer.join()
 
 class Handler(FileSystemEventHandler):
@@ -124,13 +129,13 @@ class Handler(FileSystemEventHandler):
 
     def on_any_event(self, event):
         if event.event_type in ('created', 'modified'):
-            # Ignora eventos na pasta '.git'
+            # Ignore events in the '.git' folder
             if '.git' in event.src_path:
                 return
             
-            # Faz o upload do arquivo ou diretório alterado
+            # Upload the modified file or directory
             local_path = event.src_path
-            # Constrói o caminho remoto corretamente removendo a base local do caminho local completo
+            # Construct the remote path correctly by removing the base local directory from the full local path
             relative_path = os.path.relpath(local_path, self.base_local_dir)
             remote_path = sanitize_path(os.path.join(self.remote_dir, relative_path))
 
@@ -140,13 +145,13 @@ class Handler(FileSystemEventHandler):
                 upload_directory(self.ftp, local_path, remote_path)
 
 if __name__ == "__main__":
-    # Conectando ao servidor FTP
+    # Connect to the FTP server
     ftp = FTP(ftp_host)
     ftp.login(ftp_user, ftp_password)
 
-    # Inicia o monitoramento e upload
+    # Start the monitoring and uploading process
     watcher = Watcher(path_to_watch, ftp, remote_dir)
     watcher.run()
 
-    # Fechando a conexão FTP
+    # Close the FTP connection
     ftp.quit()
