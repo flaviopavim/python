@@ -1,38 +1,38 @@
 import cv2
 
-# Configurações do vídeo
-largura = 640
-altura = 480
+# Video settings
+width = 640
+height = 480
 fps = 30.0
 
-# Inicializar o objeto de captura da webcam
+# Initialize webcam capture object
 capture = cv2.VideoCapture(0)
 
-# Definir as configurações de vídeo
-capture.set(cv2.CAP_PROP_FRAME_WIDTH, largura)
-capture.set(cv2.CAP_PROP_FRAME_HEIGHT, altura)
+# Set video configurations
+capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+capture.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 capture.set(cv2.CAP_PROP_FPS, fps)
 
-# Definir o codec de vídeo e o objeto de gravação
+# Define the video codec and the recording object
 fourcc = cv2.VideoWriter_fourcc(*'XVID')
-out = cv2.VideoWriter('video.avi', fourcc, fps, (largura, altura))
+out = cv2.VideoWriter('video.avi', fourcc, fps, (width, height))
 
 while True:
-    # Ler o próximo frame da webcam
+    # Read the next frame from the webcam
     ret, frame = capture.read()
 
     if ret:
-        # Escrever o frame no arquivo de vídeo
+        # Write the frame to the video file
         out.write(frame)
 
-        # Exibir o frame capturado em tempo real
+        # Display the captured frame in real-time
         cv2.imshow("Webcam", frame)
 
-    # Aguardar o pressionamento da tecla 'q' para sair do loop
+    # Wait for the 'q' key to be pressed to exit the loop
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
-# Liberar os recursos utilizados
+# Release resources
 capture.release()
 out.release()
 cv2.destroyAllWindows()
