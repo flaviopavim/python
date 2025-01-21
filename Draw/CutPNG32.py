@@ -2,138 +2,152 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageOps
 
-def selecionar_arquivo():
-    caminho = filedialog.askopenfilename(filetypes=[("Imagem PNG", "*.png"),
-                                                   ("Imagem GIF", "*.gif"),
-                                                   ("Imagem WebP", "*.webp"),
-                                                   ("Todos os Arquivos", "*.*")])
-    if caminho:
-        abrir_imagem(caminho)
+# Function to select an image file
+def select_file():
+    path = filedialog.askopenfilename(filetypes=[
+        ("PNG Image", "*.png"),
+        ("GIF Image", "*.gif"),
+        ("WebP Image", "*.webp"),
+        ("All Files", "*.*")
+    ])
+    if path:
+        open_image(path)
 
-def abrir_imagem(caminho):
-    global imagem, imagem_tk, canvas, quadro, preview_canvas, preview_imagem
+# Function to open and process the selected image
+def open_image(path):
+    global image, image_tk, canvas, selection_frame, preview_canvas, preview_image
 
-    # Carrega a imagem
-    imagem = Image.open(caminho)
+    # Load the image
+    image = Image.open(path)
 
-    # Converte a imagem para 128 cores
-    imagem = imagem.quantize(colors=32)
+    # Quantize the image to reduce colors to 32
+    image = image.quantize(colors=32)
 
-    # Cria a imagem Tkinter
-    imagem_tk = ImageTk.PhotoImage(imagem)
+    # Create a Tkinter-compatible image
+    image_tk = ImageTk.PhotoImage(image)
 
-    # Atualiza o tamanho do canvas com a imagem redimensionada
-    canvas.config(width=imagem.width, height=imagem.height)
-    canvas.create_image(0, 0, anchor=tk.NW, image=imagem_tk)
+    # Update canvas size to fit the image
+    canvas.config(width=image.width, height=image.height)
+    canvas.create_image(0, 0, anchor=tk.NW, image=image_tk)
 
-    # Inicializa o quadro de seleção
-    quadro.place(x=0, y=0, width=64, height=64)
-    atualizar_preview()
+    # Initialize the selection frame
+    selection_frame.place(x=0, y=0, width=64, height=64)
+    update_preview()
 
-def iniciar_arrasto(event):
-    quadro.start_x = event.x
-    quadro.start_y = event.y
+# Start drag event for the selection frame
+def start_drag(event):
+    selection_frame.start_x = event.x
+    selection_frame.start_y = event.y
 
-def mover_quadro(event):
-    dx = event.x - quadro.start_x
-    dy = event.y - quadro.start_y
+# Move the selection frame during dragging
+def move_frame(event):
+    dx = event.x - selection_frame.start_x
+    dy = event.y - selection_frame.start_y
 
-    novo_x = quadro.winfo_x() + dx
-    novo_y = quadro.winfo_y() + dy
+    new_x = selection_frame.winfo_x() + dx
+    new_y = selection_frame.winfo_y() + dy
 
-    max_x = imagem.width - quadro.winfo_width()
-    max_y = imagem.height - quadro.winfo_height()
+    # Ensure the frame stays within image boundaries
+    max_x = image.width - selection_frame.winfo_width()
+    max_y = image.height - selection_frame.winfo_height()
 
-    novo_x = max(0, min(novo_x, max_x))
-    novo_y = max(0, min(novo_y, max_y))
+    new_x = max(0, min(new_x, max_x))
+    new_y = max(0, min(new_y, max_y))
 
-    quadro.place(x=novo_x, y=novo_y)
-    quadro.start_x = event.x
-    quadro.start_y = event.y
+    selection_frame.place(x=new_x, y=new_y)
+    selection_frame.start_x = event.x
+    selection_frame.start_y = event.y
 
-    atualizar_preview()
+    update_preview()
 
-def redimensionar_imagem():
+# Resize the selection frame
+def resize_image():
     try:
-        novo_tamanho = int(tamanho_input.get())
-        if novo_tamanho < 32:
-            novo_tamanho = 32  # Tamanho mínimo
+        new_size = int(size_input.get())
+        if new_size < 32:
+            new_size = 32  # Minimum size
     except ValueError:
-        print("Insira um valor válido para o tamanho.")
+        print("Please enter a valid size.")
         return
 
-    # Limitar o tamanho para não ultrapassar os limites da imagem
-    novo_tamanho = min(novo_tamanho, imagem.width, imagem.height)
+    # Limit size to ensure it doesn't exceed the image dimensions
+    new_size = min(new_size, image.width, image.height)
 
-    # Atualiza o canvas com a imagem redimensionada
-    imagem_tk = ImageTk.PhotoImage(imagem)
-    canvas.create_image(0, 0, anchor=tk.NW, image=imagem_tk)
+    # Update canvas with the resized image
+    image_tk = ImageTk.PhotoImage(image)
+    canvas.create_image(0, 0, anchor=tk.NW, image=image_tk)
 
-    quadro.place(x=0, y=0, width=novo_tamanho, height=novo_tamanho)
-    atualizar_preview()
+    selection_frame.place(x=0, y=0, width=new_size, height=new_size)
+    update_preview()
 
-def atualizar_preview():
-    global preview_imagem
+# Update the preview panel
+def update_preview():
+    global preview_image
 
-    x, y = quadro.winfo_x(), quadro.winfo_y()
-    tamanho = quadro.winfo_width()
+    x, y = selection_frame.winfo_x(), selection_frame.winfo_y()
+    size = selection_frame.winfo_width()
 
-    if tamanho > 0:
-        recorte = imagem.crop((x, y, x + tamanho, y + tamanho))
-        recorte = recorte.resize((32, 32), Image.Resampling.LANCZOS)
-        preview_imagem = ImageTk.PhotoImage(recorte)
-        preview_canvas.create_image(0, 0, anchor=tk.NW, image=preview_imagem)
+    if size > 0:
+        # Crop the image based on the selection frame
+        crop = image.crop((x, y, x + size, y + size))
+        crop = crop.resize((32, 32), Image.Resampling.LANCZOS)
 
-def salvar_imagem():
-    x, y = quadro.winfo_x(), quadro.winfo_y()
-    tamanho = quadro.winfo_width()
+        preview_image = ImageTk.PhotoImage(crop)
+        preview_canvas.create_image(0, 0, anchor=tk.NW, image=preview_image)
 
-    recorte = imagem.crop((x, y, x + tamanho, y + tamanho))
-    recorte = recorte.resize((32, 32), Image.Resampling.LANCZOS)
+# Save the cropped image
+def save_image():
+    x, y = selection_frame.winfo_x(), selection_frame.winfo_y()
+    size = selection_frame.winfo_width()
 
-    caminho_saida = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
-    if caminho_saida:
-        recorte.save(caminho_saida)
-        print(f"Imagem salva em {caminho_saida}")
+    # Crop and resize the selected region
+    crop = image.crop((x, y, x + size, y + size))
+    crop = crop.resize((32, 32), Image.Resampling.LANCZOS)
 
-# Configuração da janela principal
-janela = tk.Tk()
-janela.title("Seleção e Redimensionamento 32x32")
+    # Save the image to a file
+    save_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
+    if save_path:
+        crop.save(save_path)
+        print(f"Image saved to {save_path}")
 
-# Canvas principal
-canvas = tk.Canvas(janela, bg="white")
+# Main window setup
+window = tk.Tk()
+window.title("Selection and 32x32 Resizing Tool")
+
+# Main canvas for image display
+canvas = tk.Canvas(window, bg="white")
 canvas.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
 
-# Frame lateral
-frame_lateral = tk.Frame(janela)
-frame_lateral.pack(side=tk.RIGHT, fill=tk.Y, padx=10, pady=10)
+# Side panel for controls
+side_panel = tk.Frame(window)
+side_panel.pack(side=tk.RIGHT, fill=tk.Y, padx=10, pady=10)
 
-# Canvas de preview
-preview_canvas = tk.Canvas(frame_lateral, width=32, height=32, bg="white")
+# Preview canvas
+preview_canvas = tk.Canvas(side_panel, width=32, height=32, bg="white")
 preview_canvas.pack(pady=10)
 
-# Input de tamanho
-tamanho_label = tk.Label(frame_lateral, text="Tamanho da imagem:")
-tamanho_label.pack()
+# Input for size
+size_label = tk.Label(side_panel, text="Image Size:")
+size_label.pack()
 
-tamanho_input = tk.Entry(frame_lateral)
-tamanho_input.insert(0, "64")
-tamanho_input.pack()
+size_input = tk.Entry(side_panel)
+size_input.insert(0, "64")
+size_input.pack()
 
-btn_redimensionar = tk.Button(frame_lateral, text="Redimensionar Imagem", command=redimensionar_imagem)
-btn_redimensionar.pack(pady=5)
+resize_button = tk.Button(side_panel, text="Resize Image", command=resize_image)
+resize_button.pack(pady=5)
 
-# Botões de controle
-btn_selecionar = tk.Button(frame_lateral, text="Selecionar Arquivo", command=selecionar_arquivo)
-btn_selecionar.pack(pady=5)
+# Control buttons
+select_button = tk.Button(side_panel, text="Select File", command=select_file)
+select_button.pack(pady=5)
 
-btn_salvar = tk.Button(frame_lateral, text="Salvar Imagem", command=salvar_imagem)
-btn_salvar.pack(pady=5)
+save_button = tk.Button(side_panel, text="Save Image", command=save_image)
+save_button.pack(pady=5)
 
-# Quadro de seleção
-quadro = tk.Frame(canvas, bg="white", width=64, height=64, highlightbackground="black", highlightthickness=1)
-quadro.place(x=0, y=0)
-quadro.bind("<Button-1>", iniciar_arrasto)
-quadro.bind("<B1-Motion>", mover_quadro)
+# Selection frame
+selection_frame = tk.Frame(canvas, bg="white", width=64, height=64, highlightbackground="black", highlightthickness=1)
+selection_frame.place(x=0, y=0)
+selection_frame.bind("<Button-1>", start_drag)
+selection_frame.bind("<B1-Motion>", move_frame)
 
-janela.mainloop()
+window.mainloop()
