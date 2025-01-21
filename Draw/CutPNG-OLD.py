@@ -2,67 +2,73 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import Image, ImageTk
 
-def selecionar_arquivo():
-    caminho = filedialog.askopenfilename(filetypes=[("PNG files", "*.png")])
-    if caminho:
-        abrir_imagem(caminho)
+# Function to select a file
+def select_file():
+    path = filedialog.askopenfilename(filetypes=[("PNG files", "*.png")])
+    if path:
+        open_image(path)
 
-def abrir_imagem(caminho):
-    global imagem, imagem_tk, canvas, quadro
+# Function to open the image and prepare the canvas
+def open_image(path):
+    global image, image_tk, canvas, frame
 
-    imagem = Image.open(caminho)
-    imagem_tk = ImageTk.PhotoImage(imagem)
+    image = Image.open(path)
+    image_tk = ImageTk.PhotoImage(image)
 
-    canvas.config(width=imagem.width, height=imagem.height)
-    canvas.create_image(0, 0, anchor=tk.NW, image=imagem_tk)
+    canvas.config(width=image.width, height=image.height)
+    canvas.create_image(0, 0, anchor=tk.NW, image=image_tk)
 
-    quadro.place(x=0, y=0, width=32, height=32)
+    frame.place(x=0, y=0, width=32, height=32)
 
-def iniciar_arrasto(event):
-    quadro.start_x = event.x
-    quadro.start_y = event.y
+# Function to start dragging the selection frame
+def start_drag(event):
+    frame.start_x = event.x
+    frame.start_y = event.y
 
-def mover_quadro(event):
-    dx = event.x - quadro.start_x
-    dy = event.y - quadro.start_y
+# Function to move the selection frame during dragging
+def move_frame(event):
+    dx = event.x - frame.start_x
+    dy = event.y - frame.start_y
 
-    novo_x = quadro.winfo_x() + dx
-    novo_y = quadro.winfo_y() + dy
+    new_x = frame.winfo_x() + dx
+    new_y = frame.winfo_y() + dy
 
-    if 0 <= novo_x <= (imagem.width - 32) and 0 <= novo_y <= (imagem.height - 32):
-        quadro.place(x=novo_x, y=novo_y)
-        quadro.start_x = event.x
-        quadro.start_y = event.y
+    # Restrict movement within image boundaries
+    if 0 <= new_x <= (image.width - 32) and 0 <= new_y <= (image.height - 32):
+        frame.place(x=new_x, y=new_y)
+        frame.start_x = event.x
+        frame.start_y = event.y
 
-def recortar_e_salvar():
-    x, y = quadro.winfo_x(), quadro.winfo_y()
-    recorte = imagem.crop((x, y, x + 32, y + 32))
+# Function to crop the selected area and save it
+def crop_and_save():
+    x, y = frame.winfo_x(), frame.winfo_y()
+    cropped = image.crop((x, y, x + 32, y + 32))
 
-    caminho_saida = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
-    if caminho_saida:
-        recorte.save(caminho_saida)
-        print(f"Recorte salvo em {caminho_saida}")
+    output_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
+    if output_path:
+        cropped.save(output_path)
+        print(f"Cropped image saved at {output_path}")
 
-# Configuração da janela principal
-janela = tk.Tk()
-janela.title("Recorte 32x32")
+# Main window configuration
+window = tk.Tk()
+window.title("32x32 Crop Tool")
 
-# Canvas para exibir a imagem
-canvas = tk.Canvas(janela, bg="white")
+# Canvas to display the image
+canvas = tk.Canvas(window, bg="white")
 canvas.pack(expand=True, fill=tk.BOTH)
 
-# Botões
-btn_selecionar = tk.Button(janela, text="Selecionar Arquivo", command=selecionar_arquivo)
-btn_selecionar.pack(side=tk.TOP, pady=10)
+# Buttons
+btn_select = tk.Button(window, text="Select File", command=select_file)
+btn_select.pack(side=tk.TOP, pady=10)
 
-btn_salvar = tk.Button(janela, text="Recortar e Salvar", command=recortar_e_salvar)
-btn_salvar.pack(side=tk.BOTTOM, pady=10)
+btn_save = tk.Button(window, text="Crop and Save", command=crop_and_save)
+btn_save.pack(side=tk.BOTTOM, pady=10)
 
-# Quadro de seleção
-quadro = tk.Frame(canvas, bg="white", width=32, height=32)
-quadro.place(x=0, y=0)
-quadro.attributes = {'alpha': 0.5}
-quadro.bind("<Button-1>", iniciar_arrasto)
-quadro.bind("<B1-Motion>", mover_quadro)
+# Selection frame
+frame = tk.Frame(canvas, bg="white", width=32, height=32)
+frame.place(x=0, y=0)
+frame.attributes = {'alpha': 0.5}  # Set transparency
+frame.bind("<Button-1>", start_drag)
+frame.bind("<B1-Motion>", move_frame)
 
-janela.mainloop()
+window.mainloop()
