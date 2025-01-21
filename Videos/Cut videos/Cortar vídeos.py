@@ -5,50 +5,50 @@
 #240 x 426
 #120 x 213
 
-
 import os
 from moviepy.editor import VideoFileClip
 
-def recortar_e_centralizar(nome_arquivo, nome_saida):
-    # Carrega o vídeo original
-    video = VideoFileClip(nome_arquivo)
+def crop_and_center(input_file, output_file):
+    # Load the original video
+    video = VideoFileClip(input_file)
 
-    # Obtém as dimensões do Reels
-    largura_reels = 1080
-    altura_reels = 1920
+    # Define the dimensions for Reels
+    reels_width = 1080
+    reels_height = 1920
 
-    # Calcula as dimensões do vídeo ajustado ao Reels
-    proporcao_reels = largura_reels / altura_reels
-    proporcao_video = video.size[0] / video.size[1]
+    # Calculate the aspect ratios for Reels and the video
+    reels_aspect_ratio = reels_width / reels_height
+    video_aspect_ratio = video.size[0] / video.size[1]
 
-    if proporcao_video > proporcao_reels:
-        # O vídeo é mais largo que o Reels, então ajustamos a largura
-        nova_largura = proporcao_reels * video.size[1]
-        video = video.crop(x1=(video.size[0] - nova_largura) // 2, x2=(video.size[0] + nova_largura) // 2)
+    if video_aspect_ratio > reels_aspect_ratio:
+        # The video is wider than Reels, so adjust the width
+        new_width = reels_aspect_ratio * video.size[1]
+        video = video.crop(x1=(video.size[0] - new_width) // 2, x2=(video.size[0] + new_width) // 2)
     else:
-        # O vídeo é mais alto que o Reels, então ajustamos a altura
-        nova_altura = video.size[0] / proporcao_reels
-        video = video.crop(y1=(video.size[1] - nova_altura) // 2, y2=(video.size[1] + nova_altura) // 2)
+        # The video is taller than Reels, so adjust the height
+        new_height = video.size[0] / reels_aspect_ratio
+        video = video.crop(y1=(video.size[1] - new_height) // 2, y2=(video.size[1] + new_height) // 2)
 
-    # Redimensiona o vídeo para as dimensões do Reels
-    video = video.resize((largura_reels, altura_reels))
+    # Resize the video to the Reels dimensions
+    video = video.resize((reels_width, reels_height))
 
-    # Salva o vídeo recortado e centralizado no Reels com a mesma duração do vídeo original
-    video.write_videofile(nome_saida, codec='libx264', audio_codec="aac")
+    # Save the cropped and centered video in Reels format with the same duration as the original
+    video.write_videofile(output_file, codec='libx264', audio_codec="aac")
 
-# Obtém a lista de arquivos na pasta raiz
-pasta_raiz = "./videos/"  # Caminho para a pasta raiz
-pasta_destino = "./videos_recortados/"
-if not os.path.exists(pasta_destino):
-    # Criar a pasta
-    os.makedirs(pasta_destino)
-arquivos = os.listdir(pasta_raiz)
+# Get the list of files in the root folder
+root_folder = "./videos/"  # Path to the root folder
+output_folder = "./cropped_videos/"
+if not os.path.exists(output_folder):
+    # Create the folder
+    os.makedirs(output_folder)
 
-# Filtra os arquivos de vídeo
-videos = [arquivo for arquivo in arquivos if arquivo.endswith((".mpeg", ".mp4", ".avi", ".mov"))]
+files = os.listdir(root_folder)
 
-# Recorta e salva cada vídeo com sufixo "_reels"
+# Filter video files
+videos = [file for file in files if file.endswith((".mpeg", ".mp4", ".avi", ".mov"))]
+
+# Crop and save each video with the suffix "_reels"
 for video in videos:
-    nome_arquivo = os.path.join(pasta_raiz, video)
-    nome_saida = os.path.join(pasta_destino, video.split(".")[0] + "_recortado.mp4")
-    recortar_e_centralizar(nome_arquivo, nome_saida)
+    input_file = os.path.join(root_folder, video)
+    output_file = os.path.join(output_folder, video.split(".")[0] + "_cropped.mp4")
+    crop_and_center(input_file, output_file)
