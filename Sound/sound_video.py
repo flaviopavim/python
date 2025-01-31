@@ -1,58 +1,58 @@
 import pygame
 import numpy as np
 
-# Inicialize o pygame
+# Initialize pygame
 pygame.init()
 
-# Configuração básica do som
-pygame.mixer.init(channels=1)  # Configura o mixer para um único canal
+# Basic sound configuration
+pygame.mixer.init(channels=1)  # Sets the mixer for a single channel
 
-# Mapeia as notas para frequências (três oitavas)
-notas_para_frequencias = {
-    "C": [130.81, 261.63, 523.25],  # Dó
-    "D": [146.83, 293.66, 587.33],  # Ré
-    "E": [164.81, 329.63, 659.25],  # Mi
-    "F": [174.61, 349.23, 698.46],  # Fá
-    "G": [196.00, 392.00, 783.99],  # Sol
-    "A": [220.00, 440.00, 880.00],  # Lá
-    "B": [246.94, 493.88, 987.77],  # Si
+# Maps notes to frequencies (three octaves)
+notes_to_frequencies = {
+    "C": [130.81, 261.63, 523.25],  # C
+    "D": [146.83, 293.66, 587.33],  # D
+    "E": [164.81, 329.63, 659.25],  # E
+    "F": [174.61, 349.23, 698.46],  # F
+    "G": [196.00, 392.00, 783.99],  # G
+    "A": [220.00, 440.00, 880.00],  # A
+    "B": [246.94, 493.88, 987.77],  # B
 }
 
-# Define a duração do som em segundos e a taxa de amostragem
-duracao = 1/3  # duração do som em segundos
-taxa_amostragem = 44100  # taxa de amostragem em Hz
+# Define the duration of the sound in seconds and the sampling rate
+duration = 1/3  # duration of the sound in seconds
+sampling_rate = 44100  # sampling rate in Hz
 
-# Cria a melodia como um array de tuplas contendo as notas e os tempos de duração
-melodia = [("E", 0.5), ("E", 0.5), ("E", 1), ("E", 0.5), ("E", 0.5), ("E", 1),
-           ("E", 0.5), ("G", 0.5), ("C", 1), ("D", 0.5), ("E", 0.5), ("F", 0.5),
-           ("F", 0.5), ("F", 0.5), ("F", 0.5), ("F", 0.5), ("E", 0.5), ("E", 0.5),
-           ("E", 0.5), ("E", 0.5), ("D", 0.5), ("D", 0.5), ("E", 0.5), ("D", 0.5),
-           ("G", 0.5), ("E", 0.5), ("E", 0.5), ("E", 0.5), ("E", 0.5), ("E", 0.5),
-           ("E", 0.5), ("D", 0.5), ("D", 0.5), ("E", 0.5), ("D", 0.5), ("C", 1)]
+# Create the melody as an array of tuples containing notes and duration times
+melody = [("E", 0.5), ("E", 0.5), ("E", 1), ("E", 0.5), ("E", 0.5), ("E", 1),
+          ("E", 0.5), ("G", 0.5), ("C", 1), ("D", 0.5), ("E", 0.5), ("F", 0.5),
+          ("F", 0.5), ("F", 0.5), ("F", 0.5), ("F", 0.5), ("E", 0.5), ("E", 0.5),
+          ("E", 0.5), ("E", 0.5), ("D", 0.5), ("D", 0.5), ("E", 0.5), ("D", 0.5),
+          ("G", 0.5), ("E", 0.5), ("E", 0.5), ("E", 0.5), ("E", 0.5), ("E", 0.5),
+          ("E", 0.5), ("D", 0.5), ("D", 0.5), ("E", 0.5), ("D", 0.5), ("C", 1)]
 
-# Função para converter uma nota em um array de onda senoidal
-def nota_para_onda(nota, duracao_nota, oitava):
-    frequencia = notas_para_frequencias[nota][oitava]
-    numero_de_amostras = int(duracao_nota * taxa_amostragem)
-    tempo = np.linspace(0, duracao_nota, numero_de_amostras)
-    return np.sin(2 * np.pi * frequencia * tempo)
+# Function to convert a note into a sine wave array
+def note_to_wave(note, note_duration, octave):
+    frequency = notes_to_frequencies[note][octave]
+    num_samples = int(note_duration * sampling_rate)
+    time = np.linspace(0, note_duration, num_samples)
+    return np.sin(2 * np.pi * frequency * time)
 
-# Função para tocar a melodia
-def tocar_melodia(melodia, oitava):
-    for nota, duracao_nota in melodia:
-        onda = nota_para_onda(nota, duracao_nota, oitava)
-        pygame.mixer.Sound(onda.astype(np.float32)).play()
-        pygame.time.wait(int(duracao_nota * 1000))  # Aguarda o tempo de duração da nota
+# Function to play the melody
+def play_melody(melody, octave):
+    for note, note_duration in melody:
+        wave = note_to_wave(note, note_duration, octave)
+        pygame.mixer.Sound(wave.astype(np.float32)).play()
+        pygame.time.wait(int(note_duration * 1000))  # Waits for the note duration
 
-# Tocar a melodia em diferentes oitavas
-tocar_melodia(melodia, 0)  # Primeira oitava
-pygame.time.wait(500)  # Aguarda um pouco entre as oitavas
-tocar_melodia(melodia, 1)  # Segunda oitava
-pygame.time.wait(500)  # Aguarda um pouco entre as oitavas
-tocar_melodia(melodia, 2)  # Terceira oitava
+# Play the melody in different octaves
+play_melody(melody, 0)  # First octave
+pygame.time.wait(500)  # Waits a bit between octaves
+play_melody(melody, 1)  # Second octave
+pygame.time.wait(500)  # Waits a bit between octaves
+play_melody(melody, 2)  # Third octave
 
-# Aguarda um pouco após o término da música
+# Wait a bit after the music ends
 pygame.time.wait(500)
 
-# Finaliza o pygame
+# Quit pygame
 pygame.quit()
