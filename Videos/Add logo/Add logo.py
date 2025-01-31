@@ -1,42 +1,40 @@
 import pycuda.autoinit
-
 import os
 from moviepy.editor import VideoFileClip, ImageClip, CompositeVideoClip
 
-def adicionar_logo_videos_na_pasta(pasta_raiz, logo_path):
-    # Obtém a lista de arquivos na pasta raiz
-    arquivos = os.listdir(pasta_raiz)
+def add_logo_to_videos_in_folder(root_folder, logo_path):
+    # Get the list of files in the root folder
+    files = os.listdir(root_folder)
 
-    # Filtra os arquivos de vídeo
-    videos = [arquivo for arquivo in arquivos if arquivo.endswith((".mpeg", ".mp4", ".avi", ".mov"))]
+    # Filter video files
+    videos = [file for file in files if file.endswith((".mpeg", ".mp4", ".avi", ".mov"))]
 
-    # Para cada vídeo, adiciona o logo e salva com o mesmo nome do vídeo, mas com o sufixo "_logo"
+    # For each video, add the logo and save it with the same name but with the suffix "_logo"
     for video in videos:
-        nome_arquivo = os.path.join(pasta_raiz, video)
-        nome_saida = os.path.join(pasta_raiz, video.split(".")[0] + "_logo.mp4")
-        adicionar_logo_video(nome_arquivo, logo_path, nome_saida)
+        file_name = os.path.join(root_folder, video)
+        output_name = os.path.join(root_folder, video.split(".")[0] + "_logo.mp4")
+        add_logo_to_video(file_name, logo_path, output_name)
 
-def adicionar_logo_video(video_path, logo_path, output_path):
-    # Carrega o vídeo original
+def add_logo_to_video(video_path, logo_path, output_path):
+    # Load the original video
     video = VideoFileClip(video_path)
 
-    # Carrega a imagem do logo em formato PNG com transparência
+    # Load the PNG logo image with transparency
     logo = ImageClip(logo_path).set_duration(video.duration)
 
-    # Define a posição do logo 10 pixels do top e 10 pixels da direita
+    # Set the logo position 10 pixels from the top and 10 pixels from the right
     logo = logo.set_position(lambda t: (video.size[0] - logo.size[0] - 10, 10))
-    # Define a posição do logo 10 pixels do bottom e 10 pixels da direita
+    # Set the logo position 10 pixels from the bottom and 10 pixels from the right
     #logo = logo.set_position(lambda t: (video.size[0] - logo.size[0] - 10, video.size[1] - logo.size[1] - 10))
 
+    # Compose the original video with the logo
+    video_with_logo = CompositeVideoClip([video, logo])
 
-    # Componha o vídeo original com o logo
-    video_com_logo = CompositeVideoClip([video, logo])
+    # Save the resulting video
+    video_with_logo.write_videofile(output_path, codec='libx264', audio_codec="aac")
 
-    # Salva o vídeo resultante
-    video_com_logo.write_videofile(output_path, codec='libx264', audio_codec="aac")
-
-# Exemplo de uso
-pasta_raiz = "./"
+# Example usage
+root_folder = "./"
 logo_path = "./logo.png"
 
-adicionar_logo_videos_na_pasta(pasta_raiz, logo_path)
+add_logo_to_videos_in_folder(root_folder, logo_path)
