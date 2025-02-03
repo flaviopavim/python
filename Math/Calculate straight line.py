@@ -27,9 +27,9 @@ Xa, Ya = 1, 2
 Xb, Yb = 4, 5
 
 # Calculates coordinates of C based on Xc
-Xc, Yc = calculate_point_c(Xa, Ya, Xb, Yb, Xc=3)
+Xc, Yc = calculate_point_c(Xa, Ya, Xb, Yb, Xc=8)
 print(f"Coordinates of C: ({Xc}, {Yc})")
 
 # Calculates coordinates of C based on Yc
-Xc, Yc = calculate_point_c(Xa, Ya, Xb, Yb, Yc=4)
+Xc, Yc = calculate_point_c(Xa, Ya, Xb, Yb, Yc=10)
 print(f"Coordinates of C: ({Xc}, {Yc})")
