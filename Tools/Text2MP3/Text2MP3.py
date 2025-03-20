@@ -21,4 +21,4 @@ def talk(text,file):
     mixer.music.play()
 
 # Example usage
-talk("Hoje sou eu que vou apresentar essa bagaça","voice.mp3")
+talk("E ai manin, beleza?","hello.mp3")
