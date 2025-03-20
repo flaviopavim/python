@@ -1,3 +1,4 @@
+import time
 import os
 from gtts import gTTS
 from moviepy.editor import *
@@ -21,4 +22,4 @@ def talk(text,file):
     mixer.music.play()
 
 # Example usage
-talk("E ai manin, beleza?","hello.mp3")
+talk("Eai galera, tem vídeo novo no canal ensinando a criar essa voz. Se você gosta desse tipo de conteúdo, já deixa aquele like e se inscreva no canal. Valeu!","voice.mp3")

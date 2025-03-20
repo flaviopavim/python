@@ -2,17 +2,19 @@ import os
 from gtts import gTTS
 from moviepy.editor import *
 
+path = ".\\Tools\\TXT2MP3\\"
+
 texto = ""
 
 # Read the content of the text file
-with open("text.txt", "r", encoding="utf-8") as file:
+with open(path+"text.txt", "r", encoding="utf-8") as file:
     texto = texto + file.read()
 
 # Configure gTTS options
 tts = gTTS(text=texto, lang="pt-br", slow=False)
 
 # Save the audio to a temporary file
-temp_audio_file = "temp_audio.mp3"
+temp_audio_file = path+"temp_audio.mp3"
 tts.save(temp_audio_file)
 
 # Get the duration of the audio in seconds
@@ -27,7 +29,7 @@ video_with_audio = video.set_audio(audio_clip)
 video_accelerated = video_with_audio.fx(vfx.speedx, factor=1.1)
 
 # Save the accelerated audio in MP3 format
-output_file = "audio.mp3"
+output_file = path+"audio.mp3"
 video_accelerated.audio.write_audiofile(output_file, codec="mp3")
 
 # Remove the temporary audio file
