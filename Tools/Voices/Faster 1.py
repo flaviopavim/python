@@ -13,7 +13,7 @@ tts.save(temp_audio_file)
 # Carregar o áudio
 y, sr = librosa.load(temp_audio_file, sr=None)
 
-# 1. Acelerar o áudio em 1.5x (diminui a duração)
+# 1. Acelerar o áudio em 1.8x (diminui a duração)
 y_fast = librosa.effects.time_stretch(y, rate=1.8)
 
 # 2. Ajustar o pitch para 1.1x com um pequeno ajuste para evitar distorções
