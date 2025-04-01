@@ -1,5 +1,4 @@
 import os
-import numpy as np
 import librosa
 import soundfile as sf
 from gtts import gTTS
@@ -14,7 +13,7 @@ tts.save(temp_audio_file)
 # Carregar o áudio
 y, sr = librosa.load(temp_audio_file, sr=None)
 
-# 1. Acelerar o áudio em 1.5x (diminui a duração)
+# 1. Acelerar o áudio em 1.4x (diminui a duração)
 y_fast = librosa.effects.time_stretch(y, rate=1.4)
 
 # 2. Ajustar o pitch para 1.1x com um pequeno ajuste para evitar distorções
