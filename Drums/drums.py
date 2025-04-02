@@ -5,9 +5,9 @@ import time
 pygame.init()
 
 # Load drum sounds
-kick_sound = pygame.mixer.Sound("kick.wav")
-snare_sound = pygame.mixer.Sound("snare.wav")
-hihat_sound = pygame.mixer.Sound("hihat.wav")
+kick_sound = pygame.mixer.Sound("audio/kick.wav")
+snare_sound = pygame.mixer.Sound("audio/snare.wav")
+hihat_sound = pygame.mixer.Sound("audio/hihat.wav")
 
 # Define drum positions on the screen
 kick_position = (100, 100)
