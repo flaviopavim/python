@@ -4,18 +4,21 @@ import pygame
 pygame.init()
 
 # Carrega os sons
-kick_sound = pygame.mixer.Sound("audio/kick.wav")
+kick_sound = pygame.mixer.Sound("audio/kick-electronic.wav")
 snare_sound = pygame.mixer.Sound("audio/snare.wav")
 hihat_sound = pygame.mixer.Sound("audio/hihat.wav")
 
 # Define os padrões de batida (todos com o mesmo tamanho)
-kick_pattern = ["kick", "", "", "", "kick", "", "", "", "kick", "", "", "", "kick", "", "", ""]
-snare_pattern = ["", "", "", "", "snare", "", "", "", "", "", "", "", "snare", "", "", ""]
-hihat_pattern = ["hihat", "", "hihat", "", "hihat", "", "hihat", "", "hihat", "", "hihat", "", "hihat", "", "hihat", ""]
+kick_pattern =  ["1", "0", "1", "0", "0", "0", "1", "0", "1", "0", "1", "0", "0", "0", "0", "0"]
+snare_pattern = ["0", "0", "0", "0", "1", "0", "0", "1", "0", "1", "0", "0", "1", "0", "0", "0"]
+#hihat_pattern = ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1", "1"]
+hihat_pattern = ["1", "0", "1", "0", "1", "0", "1", "0", "1", "0", "1", "0", "1", "0", "1", "0"]
+#hihat_pattern = ["1", "0", "0", "0", "1", "0", "0", "0", "1", "0", "0", "0", "1", "0", "0", "0"]
+#hihat_pattern =  ["0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0"]
+
 
 # Configuração de tempo (similar a teclados)
-BPM = 280  # Pode ser ajustado dinamicamente como nos teclados
-PPQ = 96  # Padrão de muitos teclados MIDI
+BPM = 160  # Pode ser ajustado dinamicamente como nos teclados
 steps_per_beat = 4  # Como um sequenciador de bateria (16 passos no total)
 
 # Calcula a duração de cada passo
@@ -40,11 +43,11 @@ while running:
 
     # Verifica se é hora de tocar o próximo som
     if elapsed_time >= step_duration:
-        if kick_pattern[step_index] == "kick":
+        if kick_pattern[step_index] == "1":
             kick_sound.play()
-        if snare_pattern[step_index] == "snare":
+        if snare_pattern[step_index] == "1":
             snare_sound.play()
-        if hihat_pattern[step_index] == "hihat":
+        if hihat_pattern[step_index] == "1":
             hihat_sound.play()
 
         # Avança para o próximo step e reinicia o tempo de referência
