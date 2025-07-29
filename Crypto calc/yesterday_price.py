@@ -14,5 +14,4 @@ def lastDay():
         return float(trade['price'])
     return 0
 
-
 print(lastDay())
