@@ -1,4 +1,4 @@
-import pycuda.autoinit
+#import pycuda.autoinit
 import os
 from moviepy.editor import VideoFileClip, ImageClip, CompositeVideoClip
 

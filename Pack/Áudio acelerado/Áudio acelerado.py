@@ -5,11 +5,11 @@ from moviepy.editor import *
 texto=""
 
 # Ler o conteúdo do arquivo de texto
-with open("inicio.txt", "r", encoding="utf-8") as file:
+with open("Pack/Áudio acelerado/inicio.txt", "r", encoding="utf-8") as file:
     texto = texto+file.read()+".\n\n"
-with open("texto.txt", "r", encoding="utf-8") as file:
+with open("Pack/Áudio acelerado/texto.txt", "r", encoding="utf-8") as file:
     texto = texto+file.read()+".\n\n"
-with open("final.txt", "r", encoding="utf-8") as file:
+with open("Pack/Áudio acelerado/final.txt", "r", encoding="utf-8") as file:
     texto = texto+file.read()
 
 

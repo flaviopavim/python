@@ -5,9 +5,9 @@ import time
 pygame.init()
 
 # Load drum sounds
-kick_sound = pygame.mixer.Sound("kick-tron.wav")
-snare_sound = pygame.mixer.Sound("snare.wav")
-hihat_sound = pygame.mixer.Sound("hihat.wav")
+kick_sound = pygame.mixer.Sound("Drums/audio/kick-tron.wav")
+snare_sound = pygame.mixer.Sound("Drums/audio/snare.wav")
+hihat_sound = pygame.mixer.Sound("Drums/audio/hihat.wav")
 
 # Define the drum beat patterns
 kick_pattern =  [ 1, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0 ]

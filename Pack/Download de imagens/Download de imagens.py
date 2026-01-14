@@ -70,11 +70,11 @@ for img in image_tags:
 folder_path = "./video/"
 
 texto = ""
-with open('inicio.txt', encoding='utf-8') as file:
+with open('Pack/Áudio acelerado/inicio.txt', encoding='utf-8') as file:
     texto = texto+file.read()+".\n\n"
-with open('texto.txt', encoding='utf-8') as file:
+with open('Pack/Áudio acelerado/texto.txt', encoding='utf-8') as file:
     texto = texto+file.read()+".\n\n"
-with open('final.txt', encoding='utf-8') as file:
+with open('Pack/Áudio acelerado/final.txt', encoding='utf-8') as file:
     texto = texto+file.read()
 print(texto)
 

@@ -1,0 +1,1 @@
+py -m pip install requests beautifulsoup4 Pillow gtts moviepy

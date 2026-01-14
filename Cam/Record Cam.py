@@ -6,7 +6,7 @@ height = 480
 fps = 30.0
 
 # Initialize webcam capture object
-capture = cv2.VideoCapture(0)
+capture = cv2.VideoCapture(1)
 
 # Set video configurations
 capture.set(cv2.CAP_PROP_FRAME_WIDTH, width)

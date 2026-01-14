@@ -52,7 +52,7 @@ def on_click(x, y, button, pressed):
         if last_click_time is not None:
             interval = round(current_time - last_click_time, 2)
         else:
-            interval = 0  # First click, no interval
+            interval = 0  # First claick, no interval
 
         last_click_time = current_time
 
@@ -97,7 +97,7 @@ def on_press(key):
     except AttributeError:
         pass  # Ignore other keys
 
-# Activate listeners for mouse clicks and keyboard input
+# Activate listeners fora mouse clicks and keyboard input
 with mouse.Listener(on_click=on_click) as listener:
     with keyboard.Listener(on_press=on_press) as key_listener:
         print("Press 'a' to start recording. Right-click to save the recorded coordinates.")

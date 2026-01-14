@@ -4,9 +4,9 @@ import pygame
 pygame.init()
 
 # Carrega os sons
-kick_sound = pygame.mixer.Sound("audio/kick-electronic.wav")
-snare_sound = pygame.mixer.Sound("audio/snare.wav")
-hihat_sound = pygame.mixer.Sound("audio/hihat.wav")
+kick_sound = pygame.mixer.Sound("Drums/audio/kick-electronic.wav")
+snare_sound = pygame.mixer.Sound("Drums/audio/snare.wav")
+hihat_sound = pygame.mixer.Sound("Drums/audio/hihat.wav")
 
 # Define os padrões de batida (todos com o mesmo tamanho)
 kick_pattern =  ["1", "0", "1", "0", "0", "0", "1", "0", "1", "0", "1", "0", "0", "0", "0", "0"]
@@ -18,7 +18,7 @@ hihat_pattern = ["1", "0", "1", "0", "1", "0", "1", "0", "1", "0", "1", "0", "1"
 
 
 # Configuração de tempo (similar a teclados)
-BPM = 160  # Pode ser ajustado dinamicamente como nos teclados
+BPM = 180  # Pode ser ajustado dinamicamente como nos teclados
 steps_per_beat = 4  # Como um sequenciador de bateria (16 passos no total)
 
 # Calcula a duração de cada passo

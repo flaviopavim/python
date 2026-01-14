@@ -1,11 +1,7 @@
-import requests
-from bs4 import BeautifulSoup
-from io import BytesIO
 from PIL import Image
 import os
 from gtts import gTTS
 from moviepy.editor import *
-import random
 import shutil
 import datetime
 
