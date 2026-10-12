@@ -1,0 +1,1 @@
+Estas imagens são artes-base geradas a partir da logo, com fundo sólido e logo centralizada.\nElas NÃO são screenshots reais do aplicativo.\nPara enviar o app à App Store, capture telas reais do aplicativo nos tamanhos aceitos atualmente pelo App Store Connect.\n
